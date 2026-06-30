@@ -81,6 +81,7 @@ header.nav{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.92);bac
 /* HERO */
 .hero{position:relative;min-height:92vh;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden}
 .hero-slides{position:absolute;inset:0}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
 .hero-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.4s ease;transform:scale(1.06)}
 .hero-slide.active{opacity:1;animation:kenburns 8s ease forwards}
 @keyframes kenburns{from{transform:scale(1.06)}to{transform:scale(1.14)}}
@@ -128,6 +129,14 @@ header.nav{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.92);bac
 .ba-handle::before{content:"";position:absolute;top:0;bottom:0;width:3px;background:#fff}
 .ba-knob{width:42px;height:42px;border-radius:50%;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;color:var(--navy);position:relative;z-index:2}
 .ba-note{text-align:center;margin-top:14px;color:var(--ink-soft);font-size:.9rem}
+.ba-video-row{display:flex;gap:38px;align-items:center;justify-content:center;max-width:960px;margin:0 auto;flex-wrap:wrap}
+.ba-video-card{position:relative;flex:0 0 auto;width:360px;max-width:82vw;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);background:#1b2430;line-height:0}
+.ba-video-card video{display:block;width:100%;height:auto}
+.ba-meta{flex:1 1 300px;min-width:260px;max-width:440px}
+.ba-meta .eyebrow{margin-bottom:10px}
+.ba-meta h3{font-size:clamp(1.35rem,3vw,1.7rem);font-weight:800;line-height:1.2;margin-bottom:14px}
+.ba-meta p{color:var(--ink-soft);font-size:1rem;line-height:1.65}
+@media(max-width:640px){.ba-video-row{gap:24px}.ba-meta{text-align:center}}
 .ph-flag{display:inline-block;background:#FFF4E1;color:#8a5a00;border:1px solid #F2D79A;border-radius:6px;padding:2px 9px;font-size:.78rem;font-weight:600}
 
 /* GALLERY */
@@ -332,11 +341,9 @@ footer ul li a:hover{color:#fff}
 
 <!-- HERO -->
 <section class="hero" id="top">
-  <div class="hero-slides" id="heroSlides">
-    <div class="hero-slide active" data-bg="h1"></div>
-    <div class="hero-slide" data-bg="h2"></div>
-    <div class="hero-slide" data-bg="h3"></div>
-  </div>
+  <video class="hero-video" autoplay muted loop playsinline preload="auto">
+    <source src="hero-6s.mp4" type="video/mp4">
+  </video>
   <div class="hero-inner">
     <div class="hero-plate"><img data-img="logo" alt="New Heights Roofing Company"></div>
     <h1>Roofing done right, first time</h1>
@@ -349,7 +356,6 @@ footer ul li a:hover{color:#fff}
       </a>
     </div>
   </div>
-  <div class="hero-dots" id="heroDots"></div>
 </section>
 
 <!-- TRUST -->
@@ -396,19 +402,19 @@ footer ul li a:hover{color:#fff}
     <div class="sec-head reveal">
       <span class="eyebrow">The difference</span>
       <h2>Before and after</h2>
-      <p>Drag the slider to see the transformation. Real results from real roofs across the area.</p>
+      <p>See the transformation for yourself. Real results from real roofs across the area.</p>
     </div>
-    <div class="ba-wrap reveal">
-      <div class="ba" id="ba">
-        <div class="ba-img ba-after" data-bg="ba_after"></div>
-        <div class="ba-img ba-before" id="baBefore" data-bg="ba_before"></div>
-        <span class="ba-tag l">Before</span>
-        <span class="ba-tag r">After</span>
-        <div class="ba-handle" id="baHandle">
-          <div class="ba-knob"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6"/><path d="M15 6l6 6-6 6"/></svg></div>
-        </div>
+    <div class="ba-video-row reveal">
+      <div class="ba-video-card">
+        <video class="ba-video" muted loop playsinline preload="metadata">
+          <source src="ba-web.mp4" type="video/mp4">
+        </video>
       </div>
-      <p class="ba-note"><span class="ph-flag">Placeholder pair</span> &nbsp;These are two different properties for layout only. Send me a matched before and after of the same roof and I will drop it straight in.</p>
+      <div class="ba-meta">
+        <span class="eyebrow">Recent project</span>
+        <h3>Full Roof Replacement</h3>
+        <p>A tired, weathered roof stripped back to the rafters and completely rebuilt with new felt, batten and tiles. Clean lines, watertight detailing and a finish built to last for decades, completed start to finish by our own team.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -652,34 +658,27 @@ const burger=document.getElementById('burger'), mm=document.getElementById('mobi
 burger.addEventListener('click',()=>{mm.classList.toggle('open');burger.classList.toggle('x');});
 mm.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mm.classList.remove('open')));
 
-// ===== HERO SLIDER =====
+// ===== HERO VIDEO =====
 (function(){
-  const slides=[...document.querySelectorAll('.hero-slide')];
-  const dotsWrap=document.getElementById('heroDots');
-  let i=0;
-  slides.forEach((_,n)=>{const b=document.createElement('button');if(n===0)b.classList.add('on');b.addEventListener('click',()=>go(n));dotsWrap.appendChild(b);});
-  const dots=[...dotsWrap.children];
-  function go(n){slides[i].classList.remove('active');dots[i].classList.remove('on');i=n;slides[i].classList.add('active');dots[i].classList.add('on');}
-  let t=setInterval(()=>go((i+1)%slides.length),5500);
-  dotsWrap.addEventListener('click',()=>{clearInterval(t);t=setInterval(()=>go((i+1)%slides.length),5500);});
+  const v=document.querySelector('.hero-video');
+  if(!v)return;
+  const tryPlay=()=>{const p=v.play();if(p&&p.catch)p.catch(()=>{});};
+  v.addEventListener('canplay',tryPlay,{once:true});
+  tryPlay();
 })();
 
-// ===== BEFORE / AFTER =====
+// ===== BEFORE / AFTER VIDEO (autoplay on scroll) =====
 (function(){
-  const ba=document.getElementById('ba'), before=document.getElementById('baBefore'), handle=document.getElementById('baHandle');
-  let drag=false;
-  function set(x){
-    const r=ba.getBoundingClientRect();
-    let p=(x-r.left)/r.width; p=Math.max(0,Math.min(1,p));
-    before.style.width=(p*100)+'%'; handle.style.left=(p*100)+'%';
-  }
-  const start=()=>drag=true, end=()=>drag=false;
-  handle.addEventListener('mousedown',start); window.addEventListener('mouseup',end);
-  window.addEventListener('mousemove',e=>{if(drag)set(e.clientX);});
-  handle.addEventListener('touchstart',start,{passive:true});
-  window.addEventListener('touchend',end);
-  window.addEventListener('touchmove',e=>{if(drag)set(e.touches[0].clientX);},{passive:true});
-  ba.addEventListener('click',e=>{if(e.target!==handle&&!handle.contains(e.target))set(e.clientX);});
+  const v=document.querySelector('.ba-video');
+  if(!v)return;
+  if(!('IntersectionObserver'in window)){const p=v.play();if(p&&p.catch)p.catch(()=>{});return;}
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){const p=v.play();if(p&&p.catch)p.catch(()=>{});}
+      else{v.pause();}
+    });
+  },{threshold:0.4});
+  io.observe(v);
 })();
 
 // ===== REVIEWS (Google-style placeholders) =====
